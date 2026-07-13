@@ -3,11 +3,27 @@ from fastapi import FastAPI, Header, HTTPException
 app = FastAPI(title="Car Model API")
 
 API_TOKEN = "xyz12349dhwnsjasjojqoaj"
+# https://mock-api-wet8.onrender.com
+# GET /get-car-model-data                -> Raw array
+# GET /get-car-model-data-data           -> { "data": [...] }
+# GET /get-car-model-data-items          -> { "items": [...] }
+# GET /get-car-model-data-nested         -> { "data": { "items": [...], "total": 10 } }
 
-
+# GET /get-dealer-data                   -> Raw array
+# GET /get-dealer-data-data              -> { "data": [...] }
+# GET /get-dealer-data-items             -> { "items": [...] }
+# GET /get-dealer-data-nested            -> { "data": { "items": [...], "total": 5 } }
 # ----------------------------
 # Sample Data
 # ----------------------------
+
+# ============================================================
+# Car Variant APIs
+# ============================================================
+# GET /get-car-variant-data              -> Raw array
+# GET /get-car-variant-data-data         -> { "data": [...] }
+# GET /get-car-variant-data-items        -> { "items": [...] }
+# GET /get-car-variant-data-nested       -> { "data": { "items": [...], "total": 10 } }
 
 CAR_MODELS = [
     {
@@ -82,6 +98,98 @@ CAR_MODELS = [
     }
 ]
 
+CAR_VARIANTS = [
+    {
+        "car_variant_id": "CV001",
+        "car_model_id": "CM001",
+        "car_variant": "Sedan LX MT",
+        "fuel_type": "Petrol",
+        "transmission_type_id": "MT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "850000"
+    },
+    {
+        "car_variant_id": "CV002",
+        "car_model_id": "CM001",
+        "car_variant": "Sedan LX AT",
+        "fuel_type": "Petrol",
+        "transmission_type_id": "AT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "920000"
+    },
+    {
+        "car_variant_id": "CV003",
+        "car_model_id": "CM002",
+        "car_variant": "SUV X5 Diesel MT",
+        "fuel_type": "Diesel",
+        "transmission_type_id": "MT",
+        "upsellingEnabled": "false",
+        "exShowroomPrice": "1450000"
+    },
+    {
+        "car_variant_id": "CV004",
+        "car_model_id": "CM002",
+        "car_variant": "SUV X5 Diesel AT",
+        "fuel_type": "Diesel",
+        "transmission_type_id": "AT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "1580000"
+    },
+    {
+        "car_variant_id": "CV005",
+        "car_model_id": "CM003",
+        "car_variant": "Hatchback S MT",
+        "fuel_type": "Petrol",
+        "transmission_type_id": "MT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "690000"
+    },
+    {
+        "car_variant_id": "CV006",
+        "car_model_id": "CM004",
+        "car_variant": "Coupe GT Turbo",
+        "fuel_type": "Petrol",
+        "transmission_type_id": "AT",
+        "upsellingEnabled": "false",
+        "exShowroomPrice": "2100000"
+    },
+    {
+        "car_variant_id": "CV007",
+        "car_model_id": "CM005",
+        "car_variant": "Pickup XL 4x2",
+        "fuel_type": "Diesel",
+        "transmission_type_id": "MT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "1320000"
+    },
+    {
+        "car_variant_id": "CV008",
+        "car_model_id": "CM006",
+        "car_variant": "Electric E1 Long Range",
+        "fuel_type": "Electric",
+        "transmission_type_id": "AT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "1690000"
+    },
+    {
+        "car_variant_id": "CV009",
+        "car_model_id": "CM007",
+        "car_variant": "Hybrid H7 Premium",
+        "fuel_type": "Hybrid",
+        "transmission_type_id": "AT",
+        "upsellingEnabled": "true",
+        "exShowroomPrice": "1880000"
+    },
+    {
+        "car_variant_id": "CV010",
+        "car_model_id": "CM010",
+        "car_variant": "Mini M3 Standard",
+        "fuel_type": "Petrol",
+        "transmission_type_id": "MT",
+        "upsellingEnabled": "false",
+        "exShowroomPrice": "620000"
+    }
+]
 
 DEALERS = [
     {
@@ -242,3 +350,35 @@ def get_dealers_items(authorization: str = Header(None)):
 def get_dealers_nested(authorization: str = Header(None)):
     authenticate(authorization)
     return nested_wrapper(DEALERS)
+
+
+# ============================================================
+# Car Variant Endpoints
+# ============================================================
+
+# Raw Array
+@app.get("/get-car-variant-data")
+def get_car_variants_raw(authorization: str = Header(None)):
+    authenticate(authorization)
+    return raw(CAR_VARIANTS)
+
+
+# { "data": [...] }
+@app.get("/get-car-variant-data-data")
+def get_car_variants_data(authorization: str = Header(None)):
+    authenticate(authorization)
+    return data_wrapper(CAR_VARIANTS)
+
+
+# { "items": [...] }
+@app.get("/get-car-variant-data-items")
+def get_car_variants_items(authorization: str = Header(None)):
+    authenticate(authorization)
+    return items_wrapper(CAR_VARIANTS)
+
+
+# { "data": { "items": [...], "total": n } }
+@app.get("/get-car-variant-data-nested")
+def get_car_variants_nested(authorization: str = Header(None)):
+    authenticate(authorization)
+    return nested_wrapper(CAR_VARIANTS)
